@@ -38,7 +38,7 @@
                     <ul>
                         <li><a href='index.php#team'>The Team</a></li>
                         <li><a href='mailto:104386364@students.swinburne.edu.my'>Contact us</a></li>
-                        <li><a href='https://github.com/Miyuki32/herbaria-webstie'>Our Github</a></li>
+                        <li><a href='https://github.com/Miyuki32/herbaria-website-php'>Our Github</a></li>
                     </ul>
                 </div>
                 <div class='ft-main-item'>
