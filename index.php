@@ -263,6 +263,7 @@
     <!-- Footer Section -->
     <?php 
         include "include/footer.inc";
+        include "include/back_top.inc";
     ?>
 </body>
 
