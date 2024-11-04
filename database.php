@@ -1,18 +1,5 @@
 <?php
-
-include 'connection.php';
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "Herbaria_Database";
-
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+include 'connection.php'; // This should connect to the Herbaria_Database
 
 // Function to create the HW_Enquiry table if it doesn't exist
 function createEnquiryTable($conn) {
@@ -30,9 +17,7 @@ function createEnquiryTable($conn) {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
 
-    if (mysqli_query($conn, $sql)) {
-        echo "Table HW_Enquiry created successfully.<br>";
-    } else {
+    if (!mysqli_query($conn, $sql)) {
         echo "Error creating table HW_Enquiry: " . mysqli_error($conn) . "<br>";
     }
 }
@@ -53,17 +38,30 @@ function createPlantContributionsTable($conn) {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
 
-    if (mysqli_query($conn, $sql)) {
-        echo "Table Plant_Contributions created successfully.<br>";
-    } else {
+    if (!mysqli_query($conn, $sql)) {
         echo "Error creating table Plant_Contributions: " . mysqli_error($conn) . "<br>";
+    }
+}
+
+// Function to create the User_Register table if it doesn't exist
+function createUserRegistrationsTable($conn) { // Fixed function name
+    $sql = "CREATE TABLE IF NOT EXISTS User_Register (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        first_name VARCHAR(50) NOT NULL,
+        last_name VARCHAR(50) NOT NULL,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if (!mysqli_query($conn, $sql)) {
+        echo "Error creating table User_Register: " . mysqli_error($conn) . "<br>";
     }
 }
 
 // Call the functions to create the tables
 createEnquiryTable($conn);
 createPlantContributionsTable($conn);
+createUserRegistrationsTable($conn); // Call the corrected function
 
-// Close the connection
-mysqli_close($conn);
 ?>

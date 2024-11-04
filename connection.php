@@ -1,14 +1,14 @@
 <?php
-    $severname = "localhost";
-    $username = "root";
-    $password = "";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "Herbaria_Database";
 
-    //connection
-    $conn = mysqli_connect($severname, $username, $password);
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $dbname);
 
-    $sql = "CREATE DATABASE IF NOT EXISTS Herbaria_Database";
-
-    mysqli_query($conn, $sql);
-    mysqli_close($conn);
-
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 ?>
