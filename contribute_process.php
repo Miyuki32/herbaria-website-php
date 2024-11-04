@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (move_uploaded_file($image1["tmp_name"], $image1Path) && move_uploaded_file($image2["tmp_name"], $image2Path)) {
         // Prepare SQL query to insert data
         $sql = "INSERT INTO Plant_Contributions (plant_name, scientific_name, family, genus, location, date_collected, description, image1, image2) 
-                VALUES ('$plantName', '$scientificName', '$family', '$genus', '$location', '$date', '$description', '$image1Path', '$image 2Path')";
+                VALUES ('$plantName', '$scientificName', '$family', '$genus', '$location', '$date', '$description', '$image1Path', '$image2Path')";
 
         if (mysqli_query($conn, $sql)) {
             echo "Contribution submitted successfully.";
