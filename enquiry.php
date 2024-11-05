@@ -17,7 +17,7 @@
         ?>
         <section class="enquiry-container">
             <h1>Enquiry Form</h1>
-            <form action="/submit-enquiry" method="POST">
+            <form action="enquiry_process.php" method="POST">
 
             <label for="first-name">First Name</label>
             <input type="text" id="first-name" name="first-name" maxlength="25" pattern="[A-Za-z]+" required placeholder="Enter your first name">

@@ -23,7 +23,7 @@
                         <p>Help us grow our collection by sharing your plant discoveries. Your contribution is valuable in expanding our botanical knowledge.</p>
                     </section>
                     <h2>Plant Contribution Form</h2>
-                    <form class="contribute-form">
+                    <form class="contribute-form" action="contribute_process.php" method="POST" enctype="multipart/form-data">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="plantName">Plant Name</label>
