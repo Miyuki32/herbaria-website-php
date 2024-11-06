@@ -1,8 +1,17 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+session_start(); // Start the session
 
-session_start();
+// Debugging: Check session variables
+echo '<pre>';
+print_r($_SESSION);
+echo '</pre>';
+
+// Check if the user is logged in
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header("Location: login.php"); // Redirect to the login page
+    exit();
+}
+
 include 'database.php';
 $servername = "localhost";
 $username = "root";
