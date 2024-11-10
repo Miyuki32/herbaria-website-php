@@ -1,108 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Identify</title>
-        <meta name="author" content="Ivan Liang Jin Ngu">
-        <meta name="description" content="Webpage about identifying plants.">
-        <meta name="keywords" content="identify, Herbarium">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="./style/style.css">
-        <link rel="icon" href="./images/logo.png">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-    </head> 
-    <body id="identify_body">
-        <?php
-            include 'include/header.inc';
-        ?>
-        <section class="hero" id="identify_hero">
-            <div class="hero-text">
-                <h1>Welcome to the Identify</h1>
-                <p>Your guide to understanding on how to indentify a plant.</p>
-            </div>
-        </section>
-        <div class="upload_divider" id="identify_form">
-            <h1>Need help identifying plants?</h1>
+<head>
+    <meta charset="UTF-8">
+    <title>Identify</title>
+    <meta name="author" content="Ivan Liang Jin Ngu">
+    <meta name="description" content="Webpage about identifying plants.">
+    <meta name="keywords" content="identify, Herbarium">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="icon" href="./images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body id="identify_body">
+
+<?php
+include 'include/header.inc';
+
+$showResult = false;
+$uploadDir = 'uploads/';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if a file was uploaded
+    if (!isset($_FILES['file_upload']) || $_FILES['file_upload']['error'] == UPLOAD_ERR_NO_FILE) {
+        $error = "No file uploaded. Please select an image file.";
+    } else {
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $uploadedFileName = basename($_FILES['file_upload']['name']);
+        $targetFilePath = $uploadDir . $uploadedFileName;
+
+        if (move_uploaded_file($_FILES['file_upload']['tmp_name'], $targetFilePath)) {
+            $apiKey = "";
+            $apiUrl = "https://api.plant.id/v2/identify";
+
+            $imageData = base64_encode(file_get_contents($targetFilePath));
+
+            $data = [
+                'api_key' => $apiKey,
+                'images' => [$imageData],
+                'modifiers' => ["crops_fast", "similar_images"],
+                'plant_language' => "en",
+                'plant_details' => ["common_names", "wiki_description", "taxonomy", "watering"]
+            ];
+
+            $ch = curl_init($apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $result = json_decode($response, true);
+            if (isset($result['suggestions'][0])) {
+                $showResult = true;
+                $plantName = $result['suggestions'][0]['plant_name'];
+                $commonName = $result['suggestions'][0]['plant_details']['common_names'][0] ?? "Unknown";
+                $description = $result['suggestions'][0]['plant_details']['wiki_description']['value'] ?? "Description not available.";
+                $taxonomy = $result['suggestions'][0]['plant_details']['taxonomy'] ?? [];
+
+                // Extract classification details (family, genus, species)
+                $kingdom = $taxonomy['kingdom'] ?? "Unknown";
+                $family = $taxonomy['family'] ?? "Unknown";
+                $genus = $taxonomy['genus'] ?? "Unknown";
+
+                // Handle watering preferences - only show minimum recommended watering
+                $watering = isset($result['suggestions'][0]['plant_details']['watering']) ? $result['suggestions'][0]['plant_details']['watering'] : null;
+                if ($watering) {
+                    $minWatering = $watering['min'] ?? 1;
+                    $wateringText = "Recommended minimum watering: " . getWateringText($minWatering);
+                } else {
+                    $wateringText = "Watering details not available.";
+                }
+            } else {
+                $error = "Plant not identified. Please try another image.";
+            }
+        } else {
+            $error = "Failed to upload image.";
+        }
+    }
+}
+
+function getWateringText($value) {
+    switch ($value) {
+        case 1: return "Dry";
+        case 2: return "Medium";
+        case 3: return "Wet";
+        default: return "Unknown";
+    }
+}
+?>
+
+<section class="hero" id="identify_hero">
+    <div class="hero-text">
+        <h1>Welcome to the Identify</h1>
+        <p>Your guide to understanding how to identify a plant.</p>
+    </div>
+</section>
+
+<div class="upload_divider" id="identify_form">
+    <h1>Need help identifying plants?</h1>
+</div>
+
+<div class="content_con">
+    <form action="identify.php" method="post" enctype="multipart/form-data" class="upload_form">
+        <div class="upload_container">
+            <div class="upload_icon">⬇️</div>
+            <p class="upload_text">Choose a file or drag it here.</p>
+            <input type="file" id="file_upload" name="file_upload" accept="image/*">
         </div>
-        <!-- Upload form -->
-        <div class="content_con">
-            <form action="/upload" method="post" enctype="multipart/form-data" class="upload_form" onsubmit="return false;">
-                <div class="upload_container">
-                    <div class="upload_icon">⬇️</div>
-                    <p class="upload_text">Choose a file or drag it here.</p>
-                    <input type="file" id="file_upload" name="file_upload" accept="image/*">
-                </div>
-                <!-- Hidden checkbox to trigger the reveal -->
-                <label for="toggle" class="upload_button" title="Click here for example result.">
-                    <span class="button_text">Upload File</span>
-                </label>
-            </form>
-        </div>
-        <input type="checkbox" id="toggle">
-        <!-- Content to be revealed -->
-        <div class="hide_content">
-            <div class="divider">
-                <h1>Example result:</h1>
-            </div>
-            <div class="identify_class_def">
-                <h2 class="title">Morning Glory</h2>
-                <div class="content-wrapper">
-                    <figure class="identify_figure">
-                        <img src="./images/morning_flower.webp" alt="morning_flower" id="morning_flower1">
-                        <img src="./images/GoodMorning1.jpeg" alt="morning_flower" id="morning_flower2">
-                        <img src="./images/GoodMorning3.jpeg" alt="morning_flower" id="morning_flower3">
-                    </figure>
-                    <div class="identify_textarea">
-                        <table class="identify_table">
-                            <tr>
-                                <th>Name:</th>
-                                <td>Morning Glory</td>
-                            </tr>
-                            <tr>
-                                <th>Scientific Name:</th>
-                                <td>Ipomoea purpurea</td>
-                            </tr>
-                            <tr>
-                                <th>Tutorial:</th>
-                                <td>Morning Glories are wonderful, quickly developing vines that grow vibrant, bell-shaped flowers of different colors, with blue, purple and/or pink being the most abundant ones. This instruction is to direct you with planting, caring for, and other steps to successfully grow these beautiful and colorful flowers. You will be informed how to select the right place, prepare the soil, and the way to prop the flowers while they're growing, so they will thrive and bloom optimally.</td>
-                            </tr>
-                            <tr>
-                                <th>Tools:</th>
-                                <td>
-                                    <ul>
-                                        <li>Garden trowel</li>
-                                        <li>Gardening gloves</li>
-                                        <li>Trellis or support structure</li>
-                                        <li>Watering can</li>
-                                        <li>Organic fertilizer</li>
-                                        <li>Mulch</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Care:</th>
-                                <td>
-                                    <ul>
-                                        <li><strong>Sunlight:</strong> Morning Glories thrive in full sunlight, requiring at least 6 hours of direct sunlight daily.</li>
-                                        <li><strong>Soil:</strong> They prefer well-draining soil with a slightly acidic to neutral pH. Amend with compost for better results.</li>
-                                        <li><strong>Watering: </strong>Keep the soil evenly moist, especially during the initial growth phase. Once established, they are drought-tolerant but still appreciate regular watering.</li>
-                                        <li><strong>Support:</strong> Provide a trellis or other support for the vines to climb.</li>
-                                        <li><strong>Fertilization:</strong> Feed with a balanced, slow-release fertilizer every 4-6 weeks during the growing season.</li>
-                                        <li><strong>Pruning:</strong> Cut back dead or damaged vines to encourage healthier growth.</li>
-                                        <li><strong>Pest Control:</strong> Keep an eye out for aphids and other common garden pests. Neem oil can be used as an organic treatment if necessary.</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <input type="checkbox" id="toggle">
-                <label for="toggle" class="close_button" title="Click here to close.">
-                   <img src="./images/close.png" alt="close logo">
-                </label>
-            </div>
-        </div>
+        <button type="submit" class="upload_button">Upload File</button>
+    </form>
+</div>
+
+<?php if ($showResult): ?>
+    <input type="checkbox" id="toggle" checked>
+    <div class="hide_content">
         <div class="divider">
+            <h1>Result:</h1>
+        </div>
+        <div class="identify_class_def">
+            <h2 class="title"><?= htmlspecialchars($commonName) ?></h2>
+            <div class="content-wrapper">
+                <figure class="identify_figure">
+                    <img src="<?= htmlspecialchars($targetFilePath) ?>" alt="Uploaded plant image" id="upload_plant">
+                </figure>
+                <div class="identify_textarea">
+                    <table class="identify_table">
+                        <tr>
+                            <th>Name:</th>
+                            <td><?= htmlspecialchars($commonName) ?></td>
+                        </tr>
+                        <tr>
+                            <th>Scientific Name:</th>
+                            <td><?= htmlspecialchars($plantName) ?></td>
+                        </tr>
+                        <tr>
+                            <th>Classification:</th>
+                            <td>
+                                <strong>Family:</strong> <?= htmlspecialchars($family) ?><br>
+                                <strong>Genus:</strong> <?= htmlspecialchars($genus) ?><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description:</th>
+                            <td><?= htmlspecialchars($description) ?></td>
+                        </tr>
+                        <tr>
+                            <th>Watering:</th>
+                            <td><?= htmlspecialchars($wateringText) ?></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <label for="toggle" class="close_button" title="Click here to close.">
+               <img src="./images/close.png" alt="close logo">
+            </label>
+        </div>
+    </div>
+<?php elseif (isset($error)): ?>
+    <p><?= htmlspecialchars($error) ?></p>
+<?php endif; ?>
+<div class="divider">
             <h1>How can you identify a plant?</h1>
         </div>
         <div class="content_con">
@@ -195,9 +257,12 @@
                 </figure>
             </div>
         </div>
-        <?php
-            include 'include/footer.inc';
-            include 'include/back_top.inc';
-        ?>
-    </body>
+
+
+<?php
+include 'include/footer.inc';
+include 'include/back_top.inc';
+?>
+
+</body>
 </html>

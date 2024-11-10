@@ -1,5 +1,10 @@
 <?php
-include 'connection.php'; // This should connect to the Herbaria_Database
+$conn = include 'connection.php'; // This should connect to the Herbaria_Database
+
+// Check if the connection was successful
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
 // Function to create the HW_Enquiry table if it doesn't exist
 function createEnquiryTable($conn) {
@@ -44,24 +49,60 @@ function createPlantContributionsTable($conn) {
 }
 
 // Function to create the User_Register table if it doesn't exist
-function createUserRegistrationsTable($conn) { // Fixed function name
+function createUserRegistrationsTable($conn) {
     $sql = "CREATE TABLE IF NOT EXISTS User_Register (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id INT(11) AUTO_INCREMENT PRIMARY KEY,
         first_name VARCHAR(50) NOT NULL,
         last_name VARCHAR(50) NOT NULL,
         email VARCHAR(100) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        profile_picture VARCHAR(255)  -- Profile picture column
     )";
 
     if (!mysqli_query($conn, $sql)) {
-        echo "Error creating table User_Register: " . mysqli_error($conn) . "<br>";
+        die("Error creating table: " . mysqli_error($conn));
+    }
+}
+
+// Function to add the profile_picture column if it doesn't exist
+function addProfilePictureColumn($conn) {
+    $result = mysqli_query($conn, "SHOW COLUMNS FROM User_Register LIKE 'profile_picture'");
+    if (mysqli_num_rows($result) == 0) {
+        $sql = "ALTER TABLE User_Register ADD profile_picture VARCHAR(255)";
+        if (!mysqli_query($conn, $sql)) {
+            die("Error altering table: " . mysqli_error($conn));
+        }
+    }
+}
+
+function createAdminTable($conn) {
+    $sql = "CREATE TABLE IF NOT EXISTS admin (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL
+    )";
+
+    if (!mysqli_query($conn, $sql)) {
+        echo "Error creating table admin: " . mysqli_error($conn) . "<br>";
     }
 }
 
 // Call the functions to create the tables
 createEnquiryTable($conn);
 createPlantContributionsTable($conn);
-createUserRegistrationsTable($conn); // Call the corrected function
+createUserRegistrationsTable($conn);
+addProfilePictureColumn($conn);
+createAdminTable($conn);
+
+//Insert default admin credentials if the table is empty
+$result = mysqli_query($conn, "SELECT * FROM admin");
+if (mysqli_num_rows($result) == 0) {
+    $default_username = 'Admin';
+    $default_password = password_hash('Admin', PASSWORD_DEFAULT); // Hash the password
+    $sql = "INSERT INTO admin (username, password) VALUES ('$default_username', '$default_password')";
+    if (!mysqli_query($conn, $sql)) {
+        echo "Error inserting default admin: " . mysqli_error($conn) . "<br>";
+    }
+}
 
 ?>

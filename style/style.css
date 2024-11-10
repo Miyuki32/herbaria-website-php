@@ -73,15 +73,15 @@ font-size: 1rem;
 
 /* Navbar Styles */
 header {
-background-color: #3B5E3A;
-padding: 10px 20px;
-width: 100%;
-height: 100px;
-top: 0;
-z-index: 10;
-display: flex;
-justify-content: space-between;
-align-items: center;
+  background-color: #3B5E3A;
+  padding: 10px 20px; /* Padding for the header */
+  width: 100%;
+  height: 100px;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Center items vertically */
 }
 
 /* Hide the menu toggle checkbox */
@@ -99,9 +99,11 @@ display: none; /* Hide on larger screens */
 
 /* Navbar Styles */
 .navbar {
-  background-color: #3B5E3A;
-  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes navbar items to the right */
 }
+
 
 .navbar ul {
   list-style-type: none;
@@ -163,12 +165,82 @@ display: none; /* Hide on larger screens */
   display: block;
 }
 
-
-#login_logo{
-height: 30px;
-width: 30px;
+.navbar {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes navbar items to the right */
 }
 
+.user-dropdown {
+  position: relative; /* Positioning for dropdown */
+  display: inline-block; /* Allow dropdown to align with button */
+  margin-left: 20px; /* Spacing between the dropdown and logo */
+}
+
+.user-button {
+  background: none; /* Remove default button background */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor */
+  padding: 0; /* Remove padding for better alignment */
+  width: 200px;
+}
+
+.user-logo {
+  width: 30%;
+  padding-top: 10px;
+  border-radius: 50%;
+
+}
+
+
+.user-dropdown-content {
+  display: none; /* Hide dropdown content by default */
+  position: absolute;
+  top: 100%; /* Position below the dropdown */
+  left: 50%; /* Center it horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  background-color: #F0EAD6; /* Dropdown background color */
+  width: 220px; 
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 10px;
+  padding: 15px; /* Padding for dropdown */
+}
+
+.user-button:focus + .user-dropdown-content,
+.user-dropdown:hover .user-dropdown-content {
+    display: block; /* Show dropdown content on click or hover */
+}
+
+
+.user-dropdown-content label {
+    display: block; /* Make labels block elements */
+    margin: 10px 0 5px; /* Spacing for labels */
+}
+
+.user-dropdown-content input[type="email"],
+.user-dropdown-content input[type="password"],
+.user-dropdown-content input[type="submit"] {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding for inputs */
+    margin-bottom: 10px; /* Spacing below inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.user-dropdown-content p {
+    margin-top: 10px; /* Spacing above paragraph */
+    font-size: 0.9rem; /* Font size for paragraph */
+}
+
+.user-dropdown-content a {
+    color: #3B5E3A; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+.user-dropdown-content a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
 
 .class_divider{
 background-color: #2b4b2f;
@@ -1275,7 +1347,6 @@ text-align: center;
 }
 
 .content-wrapper {
-  display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
@@ -1290,11 +1361,11 @@ margin: 20px 0;
 
 
 
-#morning_flower1,
-#morning_flower2,
-#morning_flower3 {
-object-fit: cover;
-width: 15%;
+#upload_plant {
+  object-fit: cover;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 30px;
 }
 
 .identify_textarea {
