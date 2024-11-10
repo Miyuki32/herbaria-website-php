@@ -120,7 +120,7 @@ function getWateringText($value) {
     <input type="checkbox" id="toggle" checked>
     <div class="hide_content">
         <div class="divider">
-            <h1>Result:</h1>
+            <h1>Result (Powered by Plant.id):</h1>
         </div>
         <div class="identify_class_def">
             <h2 class="title"><?= htmlspecialchars($commonName) ?></h2>
