@@ -18,80 +18,83 @@ include 'include/header.inc';
 
 $showResult = false;
 $uploadDir = 'uploads/';
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0777, true);
+}
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if a file was uploaded
-    if (!isset($_FILES['file_upload']) || $_FILES['file_upload']['error'] == UPLOAD_ERR_NO_FILE) {
-        $error = "No file uploaded. Please select an image file.";
-    } else {
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+// Check if the form is submitted and file is uploaded
+if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] === UPLOAD_ERR_OK) {
+    // Define the target file path
+    $targetFilePath = $uploadDir . basename($_FILES['file_upload']['name']);
 
-        $uploadedFileName = basename($_FILES['file_upload']['name']);
-        $targetFilePath = $uploadDir . $uploadedFileName;
+    // Proceed with the file upload
+    if (move_uploaded_file($_FILES['file_upload']['tmp_name'], $targetFilePath)) {
+        $apiKey = "";
+        $apiUrl = "https://api.plant.id/v2/identify";
 
-        if (move_uploaded_file($_FILES['file_upload']['tmp_name'], $targetFilePath)) {
-            $apiKey = "";
-            $apiUrl = "https://api.plant.id/v2/identify";
+        $imageData = base64_encode(file_get_contents($targetFilePath));
 
-            $imageData = base64_encode(file_get_contents($targetFilePath));
+        $data = [
+            'api_key' => $apiKey,
+            'images' => [$imageData],
+            'modifiers' => ["crops_fast", "similar_images"],
+            'plant_language' => "en",
+            'plant_details' => ["common_names", "wiki_description", "taxonomy", "propagation_methods", "best_watering", "cultural_significance", "common_uses", "inaturalist_id"]
+        ];
 
-            $data = [
-                'api_key' => $apiKey,
-                'images' => [$imageData],
-                'modifiers' => ["crops_fast", "similar_images"],
-                'plant_language' => "en",
-                'plant_details' => ["common_names", "wiki_description", "taxonomy", "watering"]
-            ];
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-            $ch = curl_init($apiUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        $response = curl_exec($ch);
+        curl_close($ch);
 
-            $response = curl_exec($ch);
-            curl_close($ch);
+        $result = json_decode($response, true);
 
-            $result = json_decode($response, true);
-            if (isset($result['suggestions'][0])) {
-                $showResult = true;
-                $plantName = $result['suggestions'][0]['plant_name'];
-                $commonName = $result['suggestions'][0]['plant_details']['common_names'][0] ?? "Unknown";
-                $description = $result['suggestions'][0]['plant_details']['wiki_description']['value'] ?? "Description not available.";
-                $taxonomy = $result['suggestions'][0]['plant_details']['taxonomy'] ?? [];
+        if (isset($result['suggestions'][0])) {
+            $showResult = true;
+            $plantName = htmlspecialchars($result['suggestions'][0]['plant_name']);
+            $iNaturalistId = $result['suggestions'][0]['plant_details']['inaturalist_id'] ?? null;
+            $commonNamesArray = $result['suggestions'][0]['plant_details']['common_names'] ?? ["Unknown"];
+            $firstCommonName = htmlspecialchars($commonNamesArray[0]);
+            $firstCommonName = html_entity_decode($firstCommonName);
+            $commonName = htmlspecialchars(implode(", ", $commonNamesArray));
+            $commonName = html_entity_decode($commonName);
 
-                // Extract classification details (family, genus, species)
-                $kingdom = $taxonomy['kingdom'] ?? "Unknown";
-                $family = $taxonomy['family'] ?? "Unknown";
-                $genus = $taxonomy['genus'] ?? "Unknown";
+            $description = htmlspecialchars($result['suggestions'][0]['plant_details']['wiki_description']['value'] ?? "Description not available.");
+            $description = html_entity_decode($description);
 
-                // Handle watering preferences - only show minimum recommended watering
-                $watering = isset($result['suggestions'][0]['plant_details']['watering']) ? $result['suggestions'][0]['plant_details']['watering'] : null;
-                if ($watering) {
-                    $minWatering = $watering['min'] ?? 1;
-                    $wateringText = "Recommended minimum watering: " . getWateringText($minWatering);
-                } else {
-                    $wateringText = "Watering details not available.";
-                }
-            } else {
-                $error = "Plant not identified. Please try another image.";
-            }
+            $propagationMethodsArray = $result['suggestions'][0]['plant_details']['propagation_methods'] ?? ["Description not available."];
+            $propagationMethods = htmlspecialchars(implode(", ", $propagationMethodsArray));
+            $propagationMethods = html_entity_decode($propagationMethods);
+
+            $watering = htmlspecialchars($result['suggestions'][0]['plant_details']['best_watering'] ?? "Description not available.");
+            $watering = html_entity_decode($watering);
+
+            $culturalSignificance = htmlspecialchars($result['suggestions'][0]['plant_details']['cultural_significance'] ?? "Description not available.");
+            $culturalSignificance = html_entity_decode($culturalSignificance);
+
+            $commonUses = htmlspecialchars($result['suggestions'][0]['plant_details']['common_uses'] ?? "Description not available.");
+            $commonUses = html_entity_decode($commonUses);
+
+            $taxonomy = $result['suggestions'][0]['plant_details']['taxonomy'] ?? [];
+            $kingdom = htmlspecialchars($taxonomy['kingdom'] ?? "Unknown");
+            $family = htmlspecialchars($taxonomy['family'] ?? "Unknown");
+            $genus = htmlspecialchars($taxonomy['genus'] ?? "Unknown");
         } else {
-            $error = "Failed to upload image.";
+            $error = "Plant not identified. Please try another image.";
         }
+    } else {
+        $error = "Failed to upload image.";
+    }
+} else {
+    if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] !== UPLOAD_ERR_OK) {
+        $error = "No file uploaded or an error occurred.";
     }
 }
 
-function getWateringText($value) {
-    switch ($value) {
-        case 1: return "Dry";
-        case 2: return "Medium";
-        case 3: return "Wet";
-        default: return "Unknown";
-    }
-}
 ?>
 
 <section class="hero" id="identify_hero">
@@ -120,10 +123,10 @@ function getWateringText($value) {
     <input type="checkbox" id="toggle" checked>
     <div class="hide_content">
         <div class="divider">
-            <h1>Result (Powered by Plant.id):</h1>
+        <h1>Result (Powered by Plant.id):</h1>
         </div>
         <div class="identify_class_def">
-            <h2 class="title"><?= htmlspecialchars($commonName) ?></h2>
+            <h2 class="title"><?= htmlspecialchars($firstCommonName) ?></h2>
             <div class="content-wrapper">
                 <figure class="identify_figure">
                     <img src="<?= htmlspecialchars($targetFilePath) ?>" alt="Uploaded plant image" id="upload_plant">
@@ -139,8 +142,19 @@ function getWateringText($value) {
                             <td><?= htmlspecialchars($plantName) ?></td>
                         </tr>
                         <tr>
+                            <th>iNaturalist:</th>
+                            <td>
+                                <?php if ($iNaturalistId): ?>
+                                    <a href="https://www.inaturalist.org/taxa/<?= htmlspecialchars($iNaturalistId) ?>" target="_blank"><?= htmlspecialchars($plantName) ?></a>
+                                <?php else: ?>
+                                    Not available
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Classification:</th>
                             <td>
+                                <strong>Kingdom:</strong> <?= htmlspecialchars($kingdom) ?><br>
                                 <strong>Family:</strong> <?= htmlspecialchars($family) ?><br>
                                 <strong>Genus:</strong> <?= htmlspecialchars($genus) ?><br>
                             </td>
@@ -150,8 +164,20 @@ function getWateringText($value) {
                             <td><?= htmlspecialchars($description) ?></td>
                         </tr>
                         <tr>
+                            <th>Propagation Methods:</th>
+                            <td><?= htmlspecialchars($propagationMethods) ?></td>
+                        </tr>
+                        <tr>
                             <th>Watering:</th>
-                            <td><?= htmlspecialchars($wateringText) ?></td>
+                            <td><?= htmlspecialchars($watering) ?></td>
+                        </tr>
+                        <tr>
+                            <th>Common Uses:</th>
+                            <td><?= htmlspecialchars($commonUses) ?></td>
+                        </tr>
+                        <tr>
+                            <th>Cultural Significance:</th>
+                            <td><?= htmlspecialchars($culturalSignificance) ?></td>
                         </tr>
                     </table>
                 </div>
