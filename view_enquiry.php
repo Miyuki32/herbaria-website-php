@@ -8,9 +8,6 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     echo '<p>You must be logged in as an admin to access this page.</p>';
     echo '<p>You will be redirected to the homepage in 5 seconds.</p>';
     
-    // Sleep for 5 seconds
-    sleep(5);
-    
     // Redirect to the index page
     header("Location: index.php");
     exit; // Stop further execution
