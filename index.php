@@ -1,3 +1,7 @@
+<?php
+session_start(); // Start the session
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,22 +24,29 @@
             <a href="index.php"><img src="./images/logo.png" alt="Logo"></a>  
         </div>
         <nav class="navbar">
-                <div class="dropdown">
-                    <img src="./images/login.png" alt="login_logo" id="login_logo">
-                    <div class="dropdown-content">
-                        <form>
-                             <label for="email">Email:</label>
-                             <input type="email" id="email" name="email" placeholder="example@example.com" required>
-                             <label for="pwd">Password:</label>
-                             <input type="password" id="pwd" name="pwd" required>
-                             <input type="submit" value="Login">
-                             <p>Don't have a account?<a href="register.php"> Register now.</a></p>
+            <div class="user-dropdown">
+                <button class="user-button">
+                <img src="<?php echo isset($_SESSION['user_id']) ? (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? './images/admin.png' : htmlspecialchars($_SESSION['profile_picture'])) : './images/login.png'; ?>" alt="login_logo" class="user-logo">
+                </button>
+                <div class="user-dropdown-content">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <p class="welcome-message">Welcome, <?php echo isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? 'Admin' : htmlspecialchars($_SESSION['first_name']); ?>!</p>
+                        <div><br> </div>
+                        <a href="logout.php" class="button">Logout</a>
+                    <?php else: ?>
+                        <form action="login.php" method="POST">
+                            <label for="email">Email / Username:</label>
+                            <input type="text" id="email" name="email" placeholder="example@example.com or Admin" required>
+                            <label for="pwd">Password:</label>
+                            <input type="password" id="pwd" name="pwd" required>
+                            <input type="submit" value="Login">
+                            <p>Don't have an account? <a href="register.php"> Register now.</a></p>
                         </form>
-                    </div>
+                    <?php endif; ?>
                 </div>
+            </div>
         </nav>
     </header>
-
     <!-- Hero Section -->
      <div class="parallax">
         <section class="hero" id="main_hero">

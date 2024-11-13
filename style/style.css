@@ -73,15 +73,15 @@ font-size: 1rem;
 
 /* Navbar Styles */
 header {
-background-color: #3B5E3A;
-padding: 10px 20px;
-width: 100%;
-height: 100px;
-top: 0;
-z-index: 10;
-display: flex;
-justify-content: space-between;
-align-items: center;
+  background-color: #3B5E3A;
+  padding: 10px 20px; /* Padding for the header */
+  width: 100%;
+  height: 100px;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Center items vertically */
 }
 
 /* Hide the menu toggle checkbox */
@@ -99,9 +99,11 @@ display: none; /* Hide on larger screens */
 
 /* Navbar Styles */
 .navbar {
-  background-color: #3B5E3A;
-  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes navbar items to the right */
 }
+
 
 .navbar ul {
   list-style-type: none;
@@ -163,12 +165,82 @@ display: none; /* Hide on larger screens */
   display: block;
 }
 
-
-#login_logo{
-height: 30px;
-width: 30px;
+.navbar {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes navbar items to the right */
 }
 
+.user-dropdown {
+  position: relative; /* Positioning for dropdown */
+  display: inline-block; /* Allow dropdown to align with button */
+  margin-left: 20px; /* Spacing between the dropdown and logo */
+}
+
+.user-button {
+  background: none; /* Remove default button background */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor */
+  padding: 0; /* Remove padding for better alignment */
+  width: 50px;
+  margin-right: 55px;
+}
+
+.user-logo {
+  width: 100%;
+  padding-top: 10px;
+
+}
+
+
+.user-dropdown-content {
+  display: none; /* Hide dropdown content by default */
+  position: absolute;
+  top: 100%; /* Position below the dropdown */
+  left: 13%; /* Center it horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  background-color: #F0EAD6; /* Dropdown background color */
+  width: 220px; 
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 100  ;
+  border-radius: 10px;
+  padding: 15px; /* Padding for dropdown */
+}
+
+.user-button:focus + .user-dropdown-content,
+.user-dropdown:hover .user-dropdown-content {
+    display: block; /* Show dropdown content on click or hover */
+}
+
+
+.user-dropdown-content label {
+    display: block; /* Make labels block elements */
+    margin: 10px 0 5px; /* Spacing for labels */
+}
+
+.user-dropdown-content input[type="email"],
+.user-dropdown-content input[type="password"],
+.user-dropdown-content input[type="submit"] {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding for inputs */
+    margin-bottom: 10px; /* Spacing below inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.user-dropdown-content p {
+    margin-top: 10px; /* Spacing above paragraph */
+    font-size: 0.9rem; /* Font size for paragraph */
+}
+
+.user-dropdown-content a {
+    color: #3B5E3A; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+.user-dropdown-content a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
 
 .class_divider{
 background-color: #2b4b2f;
@@ -1256,82 +1328,157 @@ margin-left: 25px;
   color: #4A3C31;
 }
 
+/* Modal functionality */
+#toggle {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+#result_section {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+#toggle:checked ~ #result_section {
+  display: block;
+}
+
+/* Title bar */
+.result_divider {
+  background-color: #2F4F2F;
+  color: white;
+  padding: 15px;
+  width: 42%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 20px;
+  border-radius: 15px;
+}
+
+.result_divider h1 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.7rem;
+}
+
+/* Main container */
 .identify_class_def {
-border-radius: 20px;
-box-shadow: 0 10px 12px rgba(0,0,0,0.1);
-width: 90%;
-margin: 20px auto;
-padding: 25px;
-background-color: #F0EAD6; /* Light beige background */
-overflow: hidden;
+  background-color: #F0EAD6;
+  max-width: 800px;
+  margin: 20px auto;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.title {
-background-color: #2F4F2F; /* Dark green background */
-color: white;
-padding: 10px;
-margin: -25px -25px 20px -25px;
-text-align: center;
-}
-
+/* Content layout */
 .content-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  padding: 20px;
 }
 
+/* Image section */
 .identify_figure {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 10px; 
-margin: 20px 0;
+  margin: 0 0 20px 0;
+  width: 70%; /* Reduced from 100% */
+  margin-left: auto;
+  margin-right: auto;
 }
 
-
-
-#morning_flower1,
-#morning_flower2,
-#morning_flower3 {
-object-fit: cover;
-width: 15%;
+.similar_image {
+  width: 100%;
+  max-height: 350px; /* Slightly reduced height */
+  object-fit: cover;
+  border-radius: 15px; /* Increased border radius */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow */
 }
 
+/* Text content section */
 .identify_textarea {
-width: 65%;
-border: 2px solid #3B5E3A;
-border-radius: 10px;
-padding: 10px;
-background-color: white;
-margin-left: auto;
-margin-right: auto;
+  background-color: white;
+  border: 1px solid #3B5E3A;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-#identify_body {
-background-color: #F0EAD6;
+/* Table styles */
+.identify_table {
+  width: 100%;
+  border-collapse: collapse;
 }
-
 
 .identify_table th {
-text-align: right;
-padding: 20px;
-color: black;
+  text-align: left;
+  padding: 10px 0;
+  color: #2c3e50;
+  font-weight: bold;
+  width: 150px;
+  vertical-align: top;
 }
 
 .identify_table td {
-padding: 20px;
-color: black;
+  padding: 10px 0;
+  line-height: 1.6;
 }
 
+.similar-images-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  justify-content: flex-start;
+}
+
+.identify_image {
+  width: 40%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button */
 .close_button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
   cursor: pointer;
-  width: 4%;
-  float: right;
+  z-index: 2;
 }
 
-.close_button img{
-  width:  95%;
+.close_button img {
+  width: 50px;
+  height: 50px;
+  background: white;
+  padding: 7px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s;
 }
+
+.close_button:hover img {
+  background-color: #f0f0f0;
+}
+
+/* Links */
+.identify_table a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.identify_table a:hover {
+  text-decoration: underline;
+}
+
 
 footer ul {
   list-style: none;
@@ -2344,12 +2491,6 @@ border-radius: 15px 50px 0px 0px;
 
 /* The end of Flip Cards */
 
-/* identify result images */
-#morning_flower1:hover,
-#morning_flower2:hover,
-#morning_flower3:hover{
-transform: translateY(-5px);
-}
 
 /* Hide the content by default */
 .hide_content {
@@ -3046,6 +3187,58 @@ transform: translateY(-5px);
   color: #4A3C31;
   font-size: 1.1rem;
   margin-bottom: 10px;
+}
+
+/* Popup overlay style */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Show popup when checkbox is checked */
+#toggle-popup:checked + .popup-overlay {
+  display: flex;
+}
+
+/* Popup content style */
+.popup {
+  background-color: white;
+  padding: 20px 40px 20px 20px; /* Added right padding for close button */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 300px;
+  position: relative; /* For close button positioning */
+}
+
+/* Popup message style */
+.popup p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Close button style */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  padding: 5px;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #333;
 }
 
 
