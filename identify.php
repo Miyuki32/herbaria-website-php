@@ -88,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-
 <section class="hero" id="identify_hero">
     <div class="hero-text">
         <h1>Welcome to the Identify</h1>
