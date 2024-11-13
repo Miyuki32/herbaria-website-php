@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Proceed with file upload and API call
         if (move_uploaded_file($_FILES['file_upload']['tmp_name'], $targetFilePath)) {
-            $apiKey = "CSTmOnm87HrmtD3E2UDT9lNAkVcXhpvlAvxaMgZqFpbuGzKiOp";
+            $apiKey = "";
             $apiUrl = "https://api.plant.id/v2/identify";
 
             $imageData = base64_encode(file_get_contents($targetFilePath));
