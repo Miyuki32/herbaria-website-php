@@ -1381,7 +1381,6 @@ margin-left: 25px;
 
 /* Content layout */
 .content-wrapper {
-  display: flex;
   flex-direction: column;
   padding: 20px;
 }
