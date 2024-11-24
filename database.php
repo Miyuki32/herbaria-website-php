@@ -68,7 +68,8 @@ function createAdminTable($conn) {
     $sql = "CREATE TABLE IF NOT EXISTS admin (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(50) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL
+        password VARCHAR(255) NOT NULL,
+        profile_picture VARCHAR(255) -- Add profile_picture column here
     )";
     if (!mysqli_query($conn, $sql)) {
         echo "Error creating admin table: " . mysqli_error($conn) . "<br>";
@@ -86,7 +87,8 @@ $result = mysqli_query($conn, "SELECT * FROM admin");
 if (mysqli_num_rows($result) == 0) {
     $default_username = 'Admin';
     $default_password = password_hash('Admin', PASSWORD_DEFAULT); // Hash the password
-    $sql = "INSERT INTO admin (username, password) VALUES ('$default_username', '$default_password')";
+    $default_profile_picture = './images/logo.png'; // Set default profile picture path
+    $sql = "INSERT INTO admin (username, password, profile_picture) VALUES ('$default_username', '$default_password', '$default_profile_picture')";
     if (!mysqli_query($conn, $sql)) {
         echo "Error inserting default admin: " . mysqli_error($conn) . "<br>";
     }

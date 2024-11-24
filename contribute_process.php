@@ -1,3 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+
+<?php
+        include 'include/header.inc';
+?>
+
+<div class="bg_login">
+            <div class="login_content">
+                <section class="contribute_process_form_container">
+                    <section class="login_intro">
+                        <img  class="login_logo" src="./images/logo.png" alt="logo">
+
 <?php
 session_start(); // Start the session
 
@@ -49,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 VALUES ('$plantName', '$scientificName', '$family', '$genus', '$location', '$date', '$description', '$image1Path', '$image2Path')";
 
         if (mysqli_query($conn, $sql)) {
-            echo "Contribution submitted successfully.";
+            echo "Contribution submitted successfully. Your contributions will be reviewed by the admins. Thank you for providing more info for the website.";
         } else {
             echo "Error: " . mysqli_error($conn);
         }
@@ -61,3 +80,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Close the connection
 mysqli_close($conn);
 ?>
+   
+                    </section>
+                </section>
+            </div>
+        </div>
+        <?php 
+            include 'include/footer.inc';
+        ?>
+</body>
+</html>

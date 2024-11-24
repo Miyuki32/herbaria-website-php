@@ -3188,56 +3188,166 @@ border-radius: 15px 50px 0px 0px;
   margin-bottom: 10px;
 }
 
-/* Popup overlay style */
+/* Modern popup overlay with glass effect */
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: none;
+  background-color: rgba(17, 25, 40, 0.75);
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
 }
 
-/* Show popup when checkbox is checked */
+/* Checkbox control */
+#toggle-popup {
+  display: none;
+}
+
 #toggle-popup:checked + .popup-overlay {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
 }
 
-/* Popup content style */
+/* Modern glass-effect popup */
 .popup {
-  background-color: white;
-  padding: 20px 40px 20px 20px; /* Added right padding for close button */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  width: 300px;
-  position: relative; /* For close button positioning */
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px 45px;
+  border-radius: 24px;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    0 6px 12px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.07);
+  text-align: left;
+  width: min(90%, 450px);
+  position: relative;
+  transform: translateY(20px) scale(0.95);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.85)
+  );
 }
 
-/* Popup message style */
-.popup p {
+/* Animate popup entry */
+#toggle-popup:checked + .popup-overlay .popup {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Enhanced typography for popup title */
+.popup-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.popup-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border-radius: 2px;
+}
+
+/* Popup content styling with enhanced typography */
+.popup-content {
   margin: 0;
   font-size: 16px;
-  color: #333;
+  line-height: 1.7;
+  color: #4a5568;
+  font-weight: 400;
 }
 
-/* Close button style */
+/* Style for highlighted text */
+.highlight {
+  background: linear-gradient(120deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #4338ca;
+}
+
+/* Style for important text */
+.important {
+  color: #4338ca;
+  font-weight: 600;
+}
+
+/* Stylish close button */
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
   cursor: pointer;
-  padding: 5px;
-  color: #666;
-  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.close-btn:hover {
-  color: #333;
+.close-btn::before,
+.close-btn::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background-color: #4a5568;
+  transition: all 0.3s ease;
+}
+
+.close-btn::before {
+  transform: rotate(45deg);
+}
+
+.close-btn::after {
+  transform: rotate(-45deg);
+}
+
+/* Trigger button styling */
+.popup-trigger {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.popup-trigger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
 }
 
 
@@ -4138,3 +4248,90 @@ border-radius: 15px 50px 0px 0px;
       height: 20%;
     }
 }
+
+/* login page */
+
+.bg_login{
+  background: url('./images/215595.gif') no-repeat center center fixed;
+  background-size: cover;
+  height: 900px;
+ }
+
+ @media screen and (max-width: 768px) {
+  .login_content {
+      padding: 10px;
+  }
+
+  .login_intro h1 {
+      font-size: 2rem;
+  }
+
+  .login_intro p {
+      font-size: 1rem;
+  }
+
+  .login_form-container {
+      padding: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .login_intro h1 {
+      font-size: 1.8rem;
+  }
+
+  .login_form_container h2 {
+      font-size: 1.5rem;
+  }
+}
+
+.login_form_container {
+  background-color: rgba(240, 234, 214, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  margin-top: 15%;
+}
+
+.login_form_container h2 {
+  color: #2b4b2f;
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.login_content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.login_bottom{
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login_intro h1{
+  color: black;
+}
+
+.login_intro p{
+  padding-top: 20px;
+}
+
+.login_logo{
+  height: 30%;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.contribute_process_form_container{
+  background-color: rgba(240, 234, 214, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  margin-top: 300px;
+}
+

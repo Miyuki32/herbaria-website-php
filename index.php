@@ -26,7 +26,7 @@ session_start(); // Start the session
         <nav class="navbar">
             <div class="user-dropdown">
                 <button class="user-button">
-                <img src="<?php echo isset($_SESSION['user_id']) ? (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? './images/admin.png' : htmlspecialchars($_SESSION['profile_picture'])) : './images/login.png'; ?>" alt="login_logo" class="user-logo">
+                <img src="<?php echo isset($_SESSION['user_id']) ? (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? './images/logo.png' : htmlspecialchars($_SESSION['profile_picture'])) : './images/login.png'; ?>" alt="login_logo" class="user-logo">
                 </button>
                 <div class="user-dropdown-content">
                     <?php if (isset($_SESSION['user_id'])): ?>

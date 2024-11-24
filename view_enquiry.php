@@ -1,26 +1,89 @@
 <?php
 session_start();
 
-// Check if the user is logged in
+// Check if the user is logged in and is an admin
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
-    // If not logged in or not an admin, redirect to index.php or login page
-    echo '<h1>Access Denied</h1>';
-    echo '<p>You must be logged in as an admin to access this page.</p>';
-    echo '<p>You will be redirected to the homepage in 5 seconds.</p>';
-    
-    // Sleep for 5 seconds
-    sleep(5);
-    
-    // Redirect to the index page
     header("Location: index.php");
-    exit; // Stop further execution
+    exit;
 }
 
-// If the user is an admin, proceed with the dashboard
-echo '<h1>Welcome to the admin dashboard!</h1>';
-echo '<p><a href="./view_enquiry.php">View Enquiries </a></p>';
-echo '<br>';
-echo '<p><a href="./view_contribution.php">View Contributions </a></p>';
-echo '<br>';
-echo '<p><a href="./index.php">Back to Index</a></p>'
+// Database connection
+require 'connection.php'; // Update with your actual database connection script
+
+// Fetch enquiries from the database
+$query = "SELECT * FROM hw_enquiry ORDER BY created_at DESC";
+$result = $conn->query($query);
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Enquiries</title>
+    <link rel="stylesheet" href="./style/admin.css">
+</head>
+<body class="admin">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="index.php">
+            <img src="images/logo.png" alt="Logo">
+        </a>
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="admin_dashboard.php">Dashboard</a></li>
+            <li><a href="view_contribution.php">Contribute</a></li>
+            <li><a href="view_enquiry.php">Enquiry</a></li>
+            <li><a href="manage_user.php">Manage User</a></li>
+        </ul>
+        <div class="logout">
+            <a href="logout.php">Log Out</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>Submitted Enquiries</h1>
+        </div>
+
+        <?php if ($result && $result->num_rows > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Tutorial</th>
+                        <th>Submitted At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $row['id']; ?></td>
+                            <td><?= htmlspecialchars($row['first_name']); ?></td>
+                            <td><?= htmlspecialchars($row['last_name']); ?></td>
+                            <td><?= htmlspecialchars($row['email']); ?></td>
+                            <td>
+                                <?= htmlspecialchars($row['street_address']); ?>, 
+                                <?= htmlspecialchars($row['city']); ?>, 
+                                <?= htmlspecialchars($row['state']); ?>, 
+                                <?= htmlspecialchars($row['postcode']); ?>
+                            </td>
+                            <td><?= htmlspecialchars($row['phone_number']); ?></td>
+                            <td><?= htmlspecialchars($row['tutorial']); ?></td>
+                            <td><?= htmlspecialchars($row['created_at']); ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No enquiries found.</p>
+        <?php endif; ?>
+    </div>
+</body>
+</html>

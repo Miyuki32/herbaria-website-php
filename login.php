@@ -69,19 +69,35 @@ mysqli_close($conn);
     <link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <?php if ($message): ?>
-        <div class="alert">
-            <?php echo htmlspecialchars($message); ?>
+    <?php
+        include 'include/header.inc';
+    ?>
+    <div class="bg_login">
+            <div class="login_content">
+                <section class="login_form_container">
+                    <section class="login_intro">
+                    <img  class="login_logo" src="./images/logo.png" alt="logo">
+                        <h1>Welcome to the Herbaria</h1>
+                        <?php if ($message): ?>
+                            <div class="alert">
+                                <?php echo htmlspecialchars($message); ?>
+                            </div>
+                        <?php endif; ?>
+                    </section>
+                    <form action="login.php" method="POST">
+                        <label for="email">Email / Username:</label>
+                        <input type="text" id="email" name="email" required>
+                        <label for="pwd">Password:</label>
+                        <input type="password" id="pwd" name="pwd" required>
+                        <button type="submit" class="submit-button">Login</button>
+                    </form>
+                    <p class="login_bottom">Don't have an account? <a href="register.php">Register now.</a></p>
+                    <p class="login_bottom">Forgot password? Click <a href="forgot_password.php">here.</a></p>
+                </section>
+            </div>
         </div>
-    <?php endif; ?>
-    <form action="login.php" method="POST">
-        <label for="email">Email / Username:</label>
-        <input type="text" id="email" name="email" required>
-        <label for="pwd">Password:</label>
-        <input type="password" id="pwd" name="pwd" required>
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="register.php">Register now.</a></p>
+        <?php 
+            include 'include/footer.inc';
+        ?>
 </body>
 </html>
