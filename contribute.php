@@ -62,11 +62,11 @@
                             <div class="form-group">
                                 <p>Collection Location</p>
                                 <div class="radio-group">
-                                    <input type="radio" id="eastmalaysia" name="location" value="east_malaysia">
+                                    <input type="radio" id="eastmalaysia" name="location" value="east_malaysia" required>
                                     <label for="eastmalaysia">East Malaysia</label>
-                                    <input type="radio" id="westmalaysia" name="location" value="west_malaysia">
+                                    <input type="radio" id="westmalaysia" name="location" value="west_malaysia" required>
                                     <label for="westmalaysia">West Malaysia</label>
-                                    <input type="radio" id="other" name="location" value="other">
+                                    <input type="radio" id="other" name="location" value="other" required>
                                     <label for="other">Other country</label>
                                 </div>
                             </div>

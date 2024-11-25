@@ -103,6 +103,9 @@ $totalContributions = mysqli_num_rows($result);
                 <?php endif; ?>
             </tbody>
         </table>
+        <div class="export_button_container">
+            <a href="export_contributions.php" class="button" id="export_button">Export to Excel</a>
+        </div>
     </div>
 </body>
 </html>

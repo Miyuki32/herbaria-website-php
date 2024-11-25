@@ -84,6 +84,9 @@ $result = $conn->query($query);
         <?php else: ?>
             <p>No enquiries found.</p>
         <?php endif; ?>
+        <div class="export_button_container">
+            <a href="export_enquiries.php" class="button" id="export_button">Export to Excel</a>
+        </div>
     </div>
 </body>
 </html>
