@@ -15,30 +15,34 @@
 
 <?php
 include 'include/header.inc';
+require_once 'vendor/autoload.php'; // Load Composer autoloader for Dotenv
+
+// Load environment variables from .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 $showResult = false;
 $error = null;
-$uploadDir = 'uploads/';
+$uploadDir = $_ENV['UPLOAD_DIR'];
 
+// Ensure the upload directory exists
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
-// Only check for errors if a form submission occurred
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if file was uploaded
     if (!isset($_FILES['file_upload']) || $_FILES['file_upload']['error'] !== UPLOAD_ERR_OK) {
         $error = "Please select a file to upload.";
-    }
-    else {
+    } else {
         // Define the target file path
         $targetFilePath = $uploadDir . basename($_FILES['file_upload']['name']);
 
         // Proceed with file upload and API call
         if (move_uploaded_file($_FILES['file_upload']['tmp_name'], $targetFilePath)) {
-            $apiKey = "";
-            $apiUrl = "https://api.plant.id/v2/identify";
+            $apiKey = $_ENV['PLANT_ID_API_KEY'];
+            $apiUrl = $_ENV['API_URL'];
 
             $imageData = base64_encode(file_get_contents($targetFilePath));
 
@@ -59,18 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $response = curl_exec($ch);
             
-            // Check for cURL errors
             if ($response === false) {
                 $error = "API request failed: " . curl_error($ch);
             } else {
                 $result = json_decode($response, true);
 
-                // Check if suggestions are available in the result
                 if (isset($result['suggestions']) && count($result['suggestions']) > 0) {
                     $topSuggestion = $result['suggestions'][0];
                     $topProbability = $topSuggestion['probability'] ?? 0;
 
-                    // Only show results if the top suggestion has a probability of at least 10%
                     if ($topProbability >= 0.10) {
                         $showResult = true;
                     } else {
@@ -87,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 
 <section class="hero" id="identify_hero">

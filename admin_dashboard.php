@@ -3,7 +3,6 @@ session_start();
 
 // Check if the user is logged in and is an admin
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
-    sleep(5);
     header("Location: index.php");
     exit; // Stop further execution
 }

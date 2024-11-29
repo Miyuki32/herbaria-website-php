@@ -1,6 +1,10 @@
 <?php
 include 'connection.php';
-require_once 'vendor/autoload.php'; // Include the SwiftMailer autoloader
+require_once 'vendor/autoload.php'; // Include Composer's autoloader for SwiftMailer and Dotenv
+
+// Load environment variables from .env file
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $message = '';
 
@@ -25,23 +29,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_otp'])) {
         mysqli_stmt_bind_param($updateStmt, "sss", $otp, $expiry, $email);
         mysqli_stmt_execute($updateStmt);
 
-        // Set up SwiftMailer
-        // Use SSL and port 465
-        $transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-        ->setUsername('ivanngu08@gmail.com')  // Your Gmail email
-        ->setPassword('xwts xcbg lpsw qoot'); // Your Gmail password (use App password if 2FA enabled)
+        // Set up SwiftMailer using environment variables
+        $transport = (new Swift_SmtpTransport($_ENV['SMTP_HOST'], $_ENV['SMTP_PORT'], $_ENV['SMTP_ENCRYPTION']))
+            ->setUsername($_ENV['SMTP_USERNAME'])  // Gmail email from .env
+            ->setPassword($_ENV['SMTP_PASSWORD']); // Gmail password from .env
 
-        // Create the mailer using the transport configuration
         $mailer = new Swift_Mailer($transport);
 
-        // Create the message
+        // Create the email message
         $subject = "Password Reset OTP";
         $messageBody = "Your OTP for password reset is: $otp. It expires in 5 minutes.";
 
         $message = (new Swift_Message($subject))
-            ->setFrom(['ivanngu08@gmail.com' => 'Herbaria Website'])  // Your email
-            ->setTo([$email])                                    // Recipient email
-            ->setBody($messageBody);                             // Email content
+            ->setFrom([$_ENV['SMTP_USERNAME'] => 'Herbaria Website'])
+            ->setTo([$email])
+            ->setBody($messageBody);
 
         // Send the email
         try {

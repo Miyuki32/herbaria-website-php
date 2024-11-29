@@ -1,5 +1,7 @@
 {
     "require": {
-        "swiftmailer/swiftmailer": "^6.3"
+        "swiftmailer/swiftmailer": "^6.3",
+        "monolog/monolog": "^3.8",
+        "vlucas/phpdotenv": "^5.6"
     }
 }
