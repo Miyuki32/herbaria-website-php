@@ -1,9 +1,16 @@
 <?php
+session_start();
 include 'connection.php';
 require_once 'vendor/autoload.php'; // Include Composer's autoloader for SwiftMailer and Dotenv
 
+// Redirect logged-in users to the login page
+if (isset($_SESSION['user_id'])) { // Replace 'user_id' with the key you use to store the logged-in user's ID
+    header("Location: user_profile.php"); // Change 'login.php' to the desired redirect page
+    exit;
+}
+
 // Load environment variables from .env file
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
 
 $message = '';
@@ -63,15 +70,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_otp'])) {
 
 <!DOCTYPE html>
 <html>
-<head><title>Forgot Password</title></head>
+<head>
+<meta charset="UTF-8">
+        <title>Forgot Password</title>
+        <meta name="author" content="Elijah & Ivan">
+        <meta name="keywords" content="Frogot, Password">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./style/style.css">
+        <link rel="icon" href="./images/logo.png">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
 <body>
-    <form action="forgot_password.php" method="POST">
-        <label for="email">Enter your email to receive OTP:</label>
-        <input type="email" name="email" required>
-        <button type="submit" name="send_otp">Send OTP</button>
-    </form>
+    <?php include 'include/header.inc'; ?>
+    <div class="bg_login">
+        <div class="login_content">
+            <section class="login_form_container">
+                <img class="login_logo" src="./images/logo.png" alt="logo">
+                <section class="login_intro">
+                    <form action="forgot_password.php" method="POST">
+                        <div class="form-group">
+                            <label for="email">Enter your email to receive OTP:</label>
+                            <input type="email" name="email" required>
+                            <button type="submit" name="send_otp" class="submit-button">Send OTP</button>
+                        </div>
+                    </form>
+                </section>
+            </section>
+        </div>
+    </div>
     <?php if ($message): ?>
         <p><?= htmlspecialchars($message) ?></p>
     <?php endif; ?>
+    <?php include 'include/footer.inc'; ?>
 </body>
 </html>

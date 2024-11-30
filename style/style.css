@@ -4254,7 +4254,6 @@ border-radius: 15px 50px 0px 0px;
 .bg_login{
   background: url('./images/215595.gif') no-repeat center center fixed;
   background-size: cover;
-  height: 900px;
  }
 
  @media screen and (max-width: 768px) {
@@ -4290,7 +4289,8 @@ border-radius: 15px 50px 0px 0px;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
-  margin-top: 15%;
+  margin-top: 4%;
+  margin-bottom: 4%;
 }
 
 .login_form_container h2 {
@@ -4301,7 +4301,7 @@ border-radius: 15px 50px 0px 0px;
 }
 
 .login_content {
-  max-width: 600px;
+  max-width: 50%;
   margin: 0 auto;
   padding: 20px;
 }
@@ -4335,3 +4335,98 @@ border-radius: 15px 50px 0px 0px;
   margin-top: 300px;
 }
 
+.go_profile{
+  font-size: 16px;
+}
+
+#otp-body{
+  background-image: url('./images/215595.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.otp-container {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4%;
+  margin-bottom: 4%;
+  background-color: rgba(240, 234, 214, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  padding: 30px;
+  text-align: center;
+}
+
+.otp-header {
+  margin-bottom: 25px;
+}
+
+.otp-header h2 {
+  color: #4A3C31;
+  margin-bottom: 10px;
+}
+
+.otp-header p {
+  color: #4a4a4a;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #4A3C31;
+  font-weight: 600;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+
+.message {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.error-message {
+  background-color: #fde0dc;
+  color: #d32f2f;
+}
+
+.success-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+fieldset {
+  border: 3px dashed #2c5234;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+legend {
+  font-weight: bold;
+  padding: 0 10px;
+  font-size: 1.5rem;
+}
+
+.logout_button_container {
+  width: 60%;
+}

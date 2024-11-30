@@ -31,6 +31,7 @@ session_start(); // Start the session
                 <div class="user-dropdown-content">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <p class="welcome-message">Welcome, <?php echo isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? 'Admin' : htmlspecialchars($_SESSION['first_name']); ?>!</p>
+                        <a href="user_profile.php" class="go_profile">Edit Profile</a>
                         <div><br> </div>
                         <a href="logout.php" class="button">Logout</a>
                     <?php else: ?>
