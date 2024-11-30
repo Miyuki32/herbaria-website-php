@@ -6,6 +6,7 @@
         <meta name="description" content="CWA Help Desk Appointment Form">
         <meta name="keywords" content="Help Desk, Appointment, Form">
         <meta name="author" content="Neng Yi Chieng">
+        <link rel="icon" href="./images/logo.png">
         <title>Contribute</title>
         <link rel="stylesheet" href="./style/style.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">

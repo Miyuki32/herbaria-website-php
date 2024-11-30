@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Enquiry</title>
-        <meta name="author" content="Jack">
-        <meta name="keywords" content="Enquiry, Herbarium">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="./style/style.css">
-        <link rel="icon" href="./images/logo.png">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-        <title>Enquiry Form</title>
-    </head>
-    <body id="enquiry_body">
-        <?php
-            include 'include/header.inc';
-        ?>
-        <section class="enquiry-container">
-            <h1>Enquiry Form</h1>
-            <form action="enquiry_process.php" method="POST">
+<head>
+    <meta charset="UTF-8">
+    <title>Enquiry</title>
+    <meta name="author" content="Jack">
+    <meta name="keywords" content="Enquiry, Herbarium">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="icon" href="./images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body id="enquiry_body">
+    <?php include 'include/header.inc'; ?>
 
+    <section class="enquiry-container">
+        <h1>Enquiry Form</h1>
+        <form action="enquiry_process.php" method="POST">
             <label for="first-name">First Name</label>
             <input type="text" id="first-name" name="first-name" maxlength="25" pattern="[A-Za-z]+" required placeholder="Enter your first name">
 
@@ -30,7 +27,6 @@
 
             <fieldset>
                 <legend>Address</legend>
-
                 <label for="street-address">Street Address</label>
                 <input type="text" id="street-address" name="street-address" maxlength="40" required placeholder="Enter your street address">
 
@@ -74,12 +70,21 @@
             </select>
 
             <input type="submit" value="Submit Enquiry">
-            </form>
-        </section>
-        <?php
-            include 'include/footer.inc';
-            include 'include/back_top.inc';
-        ?>
-    </body>
-    </html>
-    
+        </form>
+    </section>
+
+    <!-- Popup Structure -->
+    <?php if ($message || $error): ?>
+    <input type="checkbox" id="toggle-popup" style="display: none;" checked>
+    <div class="popup-overlay">
+        <div class="popup">
+            <label for="toggle-popup" class="close-btn">✖</label>
+            <p><?= htmlspecialchars($message ?: $error) ?></p>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php include 'include/footer.inc'; ?>
+    <?php include 'include/back_top.inc'; ?>
+</body>
+</html>

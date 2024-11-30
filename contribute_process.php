@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Contribute Submitted Successfully</title>
+    <meta name="author" content="Elijah">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style/style.css">
+    <link rel="icon" href="./images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -28,13 +32,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 }
 
 include 'database.php';
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "Herbaria_Database";
-
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+require 'connection.php';
 
 // Check connection
 if (!$conn) {

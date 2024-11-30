@@ -1,20 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enquiry Submitted Successfully!</title>
+    <meta name="author" content="Ivan Liang Jin Ngu">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="icon" href="./images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<?php
+        include 'include/header.inc';
+?>
+
+<div class="bg_login">
+            <div class="login_content">
+                <section class="contribute_process_form_container">
+                    <section class="login_intro">
+                        <img  class="login_logo" src="./images/logo.png" alt="logo">
+
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include 'database.php';
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "Herbaria_Database";
+require 'connection.php';
 
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+// Initialize variables for popup messages
+$message = "";
+$error = "";
 
 // Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -33,14 +49,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO HW_Enquiry (first_name, last_name, email, street_address, city, state, postcode, phone_number, tutorial) 
             VALUES ('$first_name', '$last_name', '$email', '$street_address', '$city', '$state', '$postcode', '$phone_number', '$tutorial')";
 
-    // Execute the query and check for errors
+    // Execute the query and set popup messages
     if (mysqli_query($conn, $sql)) {
-        echo "Enquiry submitted successfully.";
+        $message = "Enquiry submitted successfully!";
     } else {
-        echo "Error: " . mysqli_error($conn);
+        $error = "Error: " . mysqli_error($conn);
     }
 }
 
 // Close the connection
 mysqli_close($conn);
 ?>
+                    <p id="enquiry_process_message"><?php echo $message; ?></p>
+                    </section>
+                </section>
+            </div>
+        </div>
+        <?php 
+            include 'include/footer.inc';
+        ?>
+</body>
+</html>
+

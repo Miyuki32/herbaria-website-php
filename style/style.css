@@ -4430,3 +4430,7 @@ legend {
 .logout_button_container {
   width: 60%;
 }
+
+#enquiry_process_message {
+  text-align: center;
+}
