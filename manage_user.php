@@ -38,31 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete'])) {
     }
 }
 
-// Handle user creation
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_user'])) {
-    $firstName = trim($_POST['first_name']);
-    $lastName = trim($_POST['last_name']);
-    $email = trim($_POST['email']);
-    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
-    $profilePicture = null; // Assume no picture for simplicity, or handle file upload here
-
-    // Insert the new user into the database
-    $insertSql = "INSERT INTO User_Register (first_name, last_name, email, password, profile_picture) VALUES (?, ?, ?, ?, ?)";
-    $insertStmt = mysqli_prepare($conn, $insertSql);
-
-    if ($insertStmt) {
-        mysqli_stmt_bind_param($insertStmt, "sssss", $firstName, $lastName, $email, $password, $profilePicture);
-        if (mysqli_stmt_execute($insertStmt)) {
-            $message = "User created successfully.";
-        } else {
-            $message = "Error creating user: " . mysqli_error($conn);
-        }
-        mysqli_stmt_close($insertStmt);
-    } else {
-        $message = "Error preparing SQL statement: " . mysqli_error($conn);
-    }
-}
-
 // Fetch all users
 $sql = "SELECT id, first_name, last_name, email, profile_picture FROM User_Register";
 $result = mysqli_query($conn, $sql);
@@ -100,24 +75,8 @@ if (!$result) {
     <div class="main-content">
         <div class="header">
             <h1>Manage Users</h1>
-        </div>
-        <div class="create-user-form">
-            <h2>Create New User</h2>
-            <form action="manage_user.php" method="POST">
-                <label for="first_name">First Name:</label>
-                <input type="text" name="first_name" required>
-
-                <label for="last_name">Last Name:</label>
-                <input type="text" name="last_name" required>
-
-                <label for="email">Email:</label>
-                <input type="email" name="email" required>
-
-                <label for="password">Password:</label>
-                <input type="password" name="password" required>
-
-                <button type="submit" name="create_user">Create User</button>
-            </form>
+            <!-- Add User Button -->
+            <a href="add_user.php" class="add-user-button">Add User</a>
         </div>
         <div class="popup-overlay <?= $message ? 'active' : '' ?>"></div>
         <div class="popup <?= $message ? 'active' : '' ?>">
@@ -170,6 +129,7 @@ if (!$result) {
             </tbody>
         </table>
     </div>
+
 </body>
 </html>
 

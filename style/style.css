@@ -4332,7 +4332,8 @@ border-radius: 15px 50px 0px 0px;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
-  margin-top: 300px;
+  margin-top: 150px;
+  margin-bottom: 150px;
 }
 
 .go_profile{
